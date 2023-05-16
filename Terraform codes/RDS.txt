@@ -1,0 +1,37 @@
+provider "aws" {
+  region = "us-east-1"  # Replace with your desired AWS region
+}
+
+resource "aws_db_subnet_group" "my_db_subnet_group" {
+  name       = "my-db-subnet-group"
+  subnet_ids = ["subnet-12345678", "subnet-23456789"]  # Replace with your subnet IDs
+
+  tags = {
+    Name = "MyDBSubnetGroup"
+  }
+}
+
+resource "aws_db_instance" "my_db_instance" {
+  engine            = "mysql"  # Replace with your desired database engine
+  instance_class    = "db.t2.micro"  # Replace with your desired instance type
+  allocated_storage = 20  # Replace with your desired storage size in GB
+  identifier        = "my-db-instance"
+  name              = "mydb"
+  username          = "admin"
+  password          = "mypassword"
+  db_subnet_group_name  = aws_db_subnet_group.my_db_subnet_group.name
+
+  vpc_security_group_ids = ["sg-12345678"]  # Replace with your security group IDs
+
+  parameter_group_name = "default.mysql5.7"  # Replace with your desired parameter group
+
+  backup_retention_period = 7  # Replace with your desired backup retention period in days
+
+  tags = {
+    Name = "MyDBInstance"
+  }
+}
+
+output "db_instance_endpoint" {
+  value = aws_db_instance.my_db_instance.endpoint
+}

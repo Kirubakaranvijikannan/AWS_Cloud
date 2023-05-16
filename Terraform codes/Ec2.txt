@@ -1,0 +1,22 @@
+provider "aws" {
+  region = "us-east-1"  # Replace with your desired AWS region
+}
+
+resource "aws_instance" "my_ec2_instance" {
+  ami           = "ami-12345678"  # Replace with the desired AMI ID
+  instance_type = "t2.micro"  # Replace with your desired instance type
+
+  key_name               = "my-key-pair"  # Replace with your key pair name
+  vpc_security_group_ids = ["sg-12345678"]  # Replace with your security group IDs
+
+  subnet_id               = "subnet-12345678"  # Replace with your subnet ID
+  associate_public_ip_address = true
+
+  tags = {
+    Name = "MyEC2Instance"
+  }
+}
+
+output "instance_id" {
+  value = aws_instance.my_ec2_instance.id
+}
